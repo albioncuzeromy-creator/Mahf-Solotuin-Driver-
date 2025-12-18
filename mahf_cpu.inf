@@ -1,0 +1,66 @@
+; Mahf Firmware CPU Driver
+; Installation Information File
+; Copyright (c) 2024 Mahf Corporation
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGUID   = {4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider    = %Manufacturer%
+CatalogFile = mahf_cpu.cat
+DriverVer   = 12/10/2024,3.0.0.1
+PnpLockDown = 1
+
+[SourceDisksNames]
+1 = %DiskName%,,,
+
+[SourceDisksFiles]
+mahf_core.sys = 1,,
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[Manufacturer]
+%Manufacturer% = MahfCPU,NTamd64,NTarm64
+
+[MahfCPU.NTamd64]
+%DeviceDesc% = MahfCPU_Install, ACPI\MAHF0001
+%DeviceDesc% = MahfCPU_Install, ACPI\GenuineIntel
+%DeviceDesc% = MahfCPU_Install, ACPI\AuthenticAMD
+
+[MahfCPU.NTarm64]
+%DeviceDesc% = MahfCPU_Install, ACPI\MAHF0001
+%DeviceDesc% = MahfCPU_Install, ACPI\ARM_CPU
+
+[MahfCPU_Install.NT]
+CopyFiles  = CopyDriver
+AddReg     = AddRegistry
+
+[CopyDriver]
+mahf_core.sys
+
+[AddRegistry]
+HKR,Parameters,PerformanceMode,0x00010001,1
+HKR,Parameters,ThermalLimit,0x00010001,85
+HKR,Parameters,PowerLimit,0x00010001,65
+HKR,Parameters,Version,0x00000001,"3.0.0"
+
+[MahfCPU_Install.NT.Services]
+AddService = mahf_cpu, 0x00000002, Service_Install
+
+[Service_Install]
+DisplayName    = %ServiceName%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 0               ; SERVICE_BOOT_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mahf_core.sys
+LoadOrderGroup = System Reserved
+
+[Service_Install.Security]
+Security = "D:P(A;;GA;;;SY)(A;;GA;;;BA)"
+
+[Strings]
+Manufacturer = "Mahf Corporation"
+DeviceDesc   = "Mahf Firmware CPU Driver"
+ServiceName  = "Mahf CPU Service"
+DiskName     = "Mahf CPU Driver Installation Disk"
