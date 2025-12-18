@@ -1,0 +1,423 @@
+<Window x:Class="MahfCPUControlPanel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Mahf Firmware CPU Control Panel" 
+        Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF0F0F23">
+    
+    <Window.Resources>
+        <!-- Styles -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D44"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF4A6BFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF4A6BFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF3955CC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF1A1A2E"/>
+            <Setter Property="BorderBrush" Value="#FF2A2A3E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <!-- Main Layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#FF1A1A2E" Padding="20,12">
+            <StackPanel>
+                <TextBlock Text="MAHF FIRMWARE CPU DRIVER" 
+                           FontSize="28" 
+                           FontWeight="Bold"
+                           Foreground="#FF4A6BFF"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Professional Universal CPU Performance Management" 
+                           FontSize="14"
+                           Foreground="#FFB0B0C0"
+                           HorizontalAlignment="Center"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left Panel - CPU Info -->
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="SYSTEM INFORMATION" 
+                               FontSize="16" 
+                               FontWeight="Bold"
+                               Foreground="#FF00D4AA"
+                               Margin="0,0,0,16"/>
+                    
+                    <!-- CPU Info Card -->
+                    <Border Background="#202A2A3E" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                        <StackPanel>
+                            <Image x:Name="VendorImage" 
+                                   Height="48" 
+                                   Margin="0,0,0,12"
+                                   HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="CpuNameLabel" 
+                                       Text="CPU Name" 
+                                       FontSize="14" 
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock x:Name="CpuCoresLabel" 
+                                       Text="Cores/Threads" 
+                                       Foreground="#FFB0B0C0"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Frequency Info -->
+                    <Border Background="#202A2A3E" CornerRadius="6" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="FREQUENCY" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <TextBlock x:Name="BaseFreqLabel" 
+                                       Text="Base: 0 MHz" 
+                                       FontSize="14"
+                                       Foreground="White"
+                                       Margin="0,4,0,2"/>
+                            <TextBlock x:Name="MaxFreqLabel" 
+                                       Text="Max: 0 MHz" 
+                                       FontSize="14"
+                                       Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Connection Status -->
+                    <Border Background="#202A2A3E" CornerRadius="6" Padding="12" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="DRIVER STATUS" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Ellipse x:Name="StatusIndicator" 
+                                         Width="10" Height="10" 
+                                         Margin="0,0,8,0"
+                                         Fill="Red"/>
+                                <TextBlock x:Name="StatusLabel" 
+                                           Text="Status: Unknown" 
+                                           FontSize="14"
+                                           Foreground="White"/>
+                            </StackPanel>
+                            <Button x:Name="RefreshButton" 
+                                    Style="{StaticResource ModernButton}"
+                                    Content="Refresh Connection"
+                                    Margin="0,8,0,0"
+                                    Click="RefreshButton_Click"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+            
+            <!-- Right Panel - Controls -->
+            <Grid Grid.Column="1" Margin="20,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Performance Cards -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                    <!-- CPU Usage Card -->
+                    <Border Style="{StaticResource CardStyle}" Width="180">
+                        <StackPanel>
+                            <TextBlock Text="CPU USAGE" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <TextBlock x:Name="CpuUsageLabel" 
+                                       Text="0%" 
+                                       FontSize="24" 
+                                       FontWeight="Bold"
+                                       Foreground="#FF4A6BFF"
+                                       Margin="0,8,0,0"/>
+                            <ProgressBar x:Name="CpuUsageBar" 
+                                         Minimum="0" Maximum="100" 
+                                         Value="0"
+                                         Height="8"
+                                         Margin="0,8,0,0">
+                                <ProgressBar.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#FF4A6BFF" Offset="0"/>
+                                        <GradientStop Color="#FF6C5CE7" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </ProgressBar.Foreground>
+                            </ProgressBar>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Temperature Card -->
+                    <Border Style="{StaticResource CardStyle}" Width="180">
+                        <StackPanel>
+                            <TextBlock Text="TEMPERATURE" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <TextBlock x:Name="TemperatureLabel" 
+                                       Text="0°C" 
+                                       FontSize="24" 
+                                       FontWeight="Bold"
+                                       Foreground="#FF00D4AA"
+                                       Margin="0,8,0,0"/>
+                            <ProgressBar x:Name="TemperatureBar" 
+                                         Minimum="0" Maximum="100" 
+                                         Value="0"
+                                         Height="8"
+                                         Margin="0,8,0,0">
+                                <ProgressBar.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#FF00D4AA" Offset="0"/>
+                                        <GradientStop Color="#FFFFA502" Offset="0.7"/>
+                                        <GradientStop Color="#FFFF4757" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </ProgressBar.Foreground>
+                            </ProgressBar>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Power Card -->
+                    <Border Style="{StaticResource CardStyle}" Width="180">
+                        <StackPanel>
+                            <TextBlock Text="POWER" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <TextBlock x:Name="PowerLabel" 
+                                       Text="0W" 
+                                       FontSize="24" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFFFA502"
+                                       Margin="0,8,0,0"/>
+                            <ProgressBar x:Name="PowerBar" 
+                                         Minimum="0" Maximum="150" 
+                                         Value="0"
+                                         Height="8"
+                                         Margin="0,8,0,0">
+                                <ProgressBar.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#FFFFA502" Offset="0"/>
+                                        <GradientStop Color="#FFFF4757" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </ProgressBar.Foreground>
+                            </ProgressBar>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Frequency Card -->
+                    <Border Style="{StaticResource CardStyle}" Width="180">
+                        <StackPanel>
+                            <TextBlock Text="FREQUENCY" 
+                                       FontSize="12" 
+                                       FontWeight="Bold"
+                                       Foreground="#FFB0B0C0"/>
+                            <TextBlock x:Name="FrequencyLabel" 
+                                       Text="0 MHz" 
+                                       FontSize="24" 
+                                       FontWeight="Bold"
+                                       Foreground="#FF6C5CE7"
+                                       Margin="0,8,0,0"/>
+                            <TextBlock x:Name="VoltageLabel" 
+                                       Text="0.00V" 
+                                       FontSize="14"
+                                       Foreground="#FFB0B0C0"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                
+                <!-- Performance Modes -->
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="PERFORMANCE MODES" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   Foreground="#FF00D4AA"
+                                   Margin="0,0,0,16"/>
+                        
+                        <!-- Current Mode Indicator -->
+                        <Border Background="#202A2A3E" CornerRadius="6" Padding="12" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="CURRENT MODE" 
+                                           FontSize="12" 
+                                           FontWeight="Bold"
+                                           Foreground="#FFB0B0C0"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                    <Ellipse x:Name="ModeIndicator" 
+                                             Width="10" Height="10" 
+                                             Margin="0,0,8,0"
+                                             Fill="Green"/>
+                                    <TextBlock x:Name="CurrentModeLabel" 
+                                               Text="Balanced" 
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Mode Buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="PowerSaveButton" 
+                                    Style="{StaticResource ModernButton}"
+                                    Width="180" Height="80"
+                                    Click="PowerSaveButton_Click">
+                                <StackPanel>
+                                    <TextBlock Text="POWER SAVE" 
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Maximum Efficiency" 
+                                               FontSize="11"
+                                               Foreground="#FFB0B0C0"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button x:Name="BalancedButton" 
+                                    Style="{StaticResource ModernButton}"
+                                    Width="180" Height="80"
+                                    Margin="12,0,12,0"
+                                    Click="BalancedButton_Click">
+                                <StackPanel>
+                                    <TextBlock Text="BALANCED" 
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Optimal Performance" 
+                                               FontSize="11"
+                                               Foreground="#FFB0B0C0"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button x:Name="PerformanceButton" 
+                                    Style="{StaticResource ModernButton}"
+                                    Width="180" Height="80"
+                                    Margin="0,0,12,0"
+                                    Click="PerformanceButton_Click">
+                                <StackPanel>
+                                    <TextBlock Text="PERFORMANCE" 
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="High Performance" 
+                                               FontSize="11"
+                                               Foreground="#FFB0B0C0"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button x:Name="ExtremeButton" 
+                                    Style="{StaticResource ModernButton}"
+                                    Width="180" Height="80"
+                                    Click="ExtremeButton_Click">
+                                <StackPanel>
+                                    <TextBlock Text="EXTREME" 
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Maximum Performance" 
+                                               FontSize="11"
+                                               Foreground="#FFB0B0C0"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+        
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#FF1A1A2E" Padding="20,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock x:Name="StatusMessageLabel" 
+                           Text=""
+                           Foreground="#FFB0B0C0"
+                           VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="SettingsButton" 
+                            Style="{StaticResource ModernButton}"
+                            Content="Settings"
+                            Padding="12,6"
+                            Click="SettingsButton_Click"/>
+                    <Button x:Name="AboutButton" 
+                            Style="{StaticResource ModernButton}"
+                            Content="About"
+                            Padding="12,6"
+                            Margin="8,0,8,0"
+                            Click="AboutButton_Click"/>
+                    <Button x:Name="ExitButton" 
+                            Style="{StaticResource ModernButton}"
+                            Content="Exit"
+                            Padding="12,6"
+                            Click="ExitButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
